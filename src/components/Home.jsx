@@ -73,10 +73,10 @@ function NFTImage({ tokenID, getCount}) {
 async function getURI () {
     const uri = await contract.tokenURI(tokenID);
  }
-
+// https://www.entspecialistspc.com/wp-content/uploads/2018/12/no-image.jpg
 return (
     <div>
-        <img src={isMinted ? imageURI: 'https://www.entspecialistspc.com/wp-content/uploads/2018/12/no-image.jpg'}></img>
+        <img src={isMinted ? imageURI: 'https://pbs.twimg.com/media/FOWYfifVIAoOkxX?format=jpg&name=large'}></img>
         <div>
             <h5>ID #0001</h5>
             {!isMinted ? (

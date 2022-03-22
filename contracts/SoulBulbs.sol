@@ -5,15 +5,35 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract SoulBulbs is ERC721, ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
+    address public artist;
+    address public txFeeToken;
+    uint public txFeeAmount;
+    mapping(address => bool) public excludedList;
 
     Counters.Counter private _tokenIdCounter;
 
     mapping(string => uint8) existingURIs;
 
-    constructor() ERC721("SoulBulbs", "SLB") {}
+    constructor(
+      address _artist,
+      address _txFeeToken,
+      uint _txFeeAmount
+    ) ERC721("SoulBulbs", "SLB") {
+      artist = _artist;
+      txFeeToken = _txFeeToken;
+      txFeeAmount = _txFeeAmount;
+      excludedList[_artist] = true;
+      _mint(artist, 0);
+    }
+
+    function setExcluded(address excluded, bool status) external {
+      require(msg.sender == artist, "artist only");
+      excludedList[excluded] = status;
+    }
 
     function _baseURI() internal pure override returns (string memory) {
         return "ipfs://";

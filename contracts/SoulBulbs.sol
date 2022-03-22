@@ -13,7 +13,7 @@ contract SoulBulbs is ERC721, ERC721URIStorage, Ownable {
 
     mapping(string => uint8) existingURIs;
 
-    constructor() ERC721("SoulBulbs", "SLBS") {}
+    constructor() ERC721("SoulBulbs", "SLB") {}
 
     function _baseURI() internal pure override returns (string memory) {
         return "ipfs://";
@@ -28,10 +28,7 @@ contract SoulBulbs is ERC721, ERC721URIStorage, Ownable {
 
     // The following functions are overrides required by Solidity.
 
-    function _burn(uint256 tokenId)
-        internal
-        override(ERC721, ERC721URIStorage)
-    {
+    function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
         super._burn(tokenId);
     }
 
@@ -40,33 +37,33 @@ contract SoulBulbs is ERC721, ERC721URIStorage, Ownable {
         view
         override(ERC721, ERC721URIStorage)
         returns (string memory)
+    
     {
         return super.tokenURI(tokenId);
     }
 
-    function isContentOwned(string memory uri) public view returns (bool) {
-        return existingURIs[uri] == 1;
-    }
+function isContentOwned(string memory uri) public view returns (bool) {
+  return existingURIs[uri] == 1;
+}
 
-    function payToMint(address recipient, string memory metadataURI)
-        public
-        payable
-        returns (uint256)
-    {
-        require(existingURIs[metadataURI] != 1, "NFT Already Minted");
-        require(msg.value >= 0.05 ether, "Not Enough ETH");
+function payToMint(
+  address recipient,
+  string memory metadataURI
+) public payable returns (uint256) {
+    require(existingURIs[metadataURI] != 1, "NFT Already Minted");
+    require (msg.value >= 0.05 ether, "Not Enough ETH");
 
-        uint256 newItemId = _tokenIdCounter.current();
-        _tokenIdCounter.increment();
-        existingURIs[metadataURI] = 1;
+    uint256 newItemId = _tokenIdCounter.current();
+    _tokenIdCounter.increment();
+    existingURIs[metadataURI] = 1;
 
-        _mint(recipient, newItemId);
-        _setTokenURI(newItemId, metadataURI);
+    _mint(recipient, newItemId);
+    _setTokenURI(newItemId, metadataURI);
+  }
 
-        return newItemId;
-    }
+function count() public view returns (uint256) {
+  return _tokenIdCounter.current();
+}
 
-    function count() public view returns (uint256) {
-        return _tokenIdCounter.current();
-    }
+
 }
